@@ -1,4 +1,4 @@
-# Multiplayer Layered Apparel Types Patch
+# Multiplayer Layered Apparel Patch
 
 A RimWorld Multiplayer compatibility patch for [Layered Apparel](https://steamcommunity.com/workshop/filedetails/?id=3632480044).
 
