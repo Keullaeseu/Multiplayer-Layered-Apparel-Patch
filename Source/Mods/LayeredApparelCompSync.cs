@@ -27,7 +27,7 @@ internal static class LayeredApparelCompSync
         // Bulk imports (wardrobe multi-select, preset apply via AddItems). If MP can't
         // handle IEnumerable, registration logs an error but single-item Adds still sync.
         var _addItemsMethod = AccessTools.DeclaredMethod(_compType, "AddItems");
-        if (_addItemsMethod != null) LayeredApparelSyncHelpers.TryRegister(_addItemsMethod, "Comp.AddItems");
+        if (_addItemsMethod != null) LayeredApparelSyncHelpers.TryRegisterNoCancel(_addItemsMethod, "Comp.AddItems");
         else Log.Warning($"{LogPrefix} Comp.AddItems not found");
 
         // Clear variants

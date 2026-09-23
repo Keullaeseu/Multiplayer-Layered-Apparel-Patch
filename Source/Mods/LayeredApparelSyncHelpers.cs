@@ -43,11 +43,20 @@ internal static class LayeredApparelSyncHelpers
 
     internal static void TryRegisterNoCancel(MethodInfo _methodInfo, string _label)
     {
-        // For setters where default(T) like false/0 is valid, CancelIfAnyArgNull
-        // only cancels on null refs, so it's safe. But bool/int/float params are
-        // never null, so both variants behave the same. Keep a separate helper
-        // for readability at call sites.
-        TryRegister(_methodInfo, _label);
+        try
+        {
+            if (_methodInfo == null)
+            {
+                Log.Warning($"{LogPrefix} Skip sync (null method): {_label}");
+                return;
+            }
+
+            MP.RegisterSyncMethod(_methodInfo);
+        }
+        catch (Exception _exception)
+        {
+            Log.Error($"{LogPrefix} Register {_label} failed: {_exception}");
+        }
     }
 
     internal static object GetComp(Pawn _pawn)

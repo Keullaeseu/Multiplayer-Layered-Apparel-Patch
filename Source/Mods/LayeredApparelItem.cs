@@ -105,26 +105,31 @@ public static class LayeredApparelItemPatch
 
         // Linking UI (ITab.CompleteLinkingCosmeticToEquipped sets LinkedApparel on
         // the attached _linkingCosmetic). Construction uses RestoreConnections, not
-        // these setters, so no spurious syncs.
-        LayeredApparelSyncHelpers.TryRegister(AccessTools.DeclaredPropertySetter(_itemType, "LinkedApparel"),
+        // these setters, so no spurious syncs. NoCancel: null means "unlink".
+        LayeredApparelSyncHelpers.TryRegisterNoCancel(AccessTools.DeclaredPropertySetter(_itemType, "LinkedApparel"),
             "Item.set_LinkedApparel");
-        LayeredApparelSyncHelpers.TryRegister(AccessTools.DeclaredPropertySetter(_itemType, "LinkedApparelDef"),
+        LayeredApparelSyncHelpers.TryRegisterNoCancel(AccessTools.DeclaredPropertySetter(_itemType, "LinkedApparelDef"),
             "Item.set_LinkedApparelDef");
 
         // Appearance picker Apply (Dialog_ColorPicker.Apply -> _item.ApplyAppearance).
         // Draft edits mutate the detached _draft and are correctly unsynced.
-        LayeredApparelSyncHelpers.TryRegister(AccessTools.DeclaredMethod(_itemType, "ApplyAppearance"),
+        // NoCancel: a null appearance (reset to default) is legitimate.
+        LayeredApparelSyncHelpers.TryRegisterNoCancel(AccessTools.DeclaredMethod(_itemType, "ApplyAppearance"),
             "Item.ApplyAppearance");
 
         // Condition editor commit (ITab.ApplyEditedCondition -> _conditionItem.ApplyDisplayCondition).
         // Intermediate edits mutate a detached clone; only the commit syncs.
-        LayeredApparelSyncHelpers.TryRegister(AccessTools.DeclaredMethod(_itemType, "ApplyDisplayCondition"),
+        // NoCancel: linkedDef is routinely null here (every Match any/all, layer,
+        // coverage and armor button passes null). Cancelling on null would silently
+        // drop all of those edits in MP, making the whole section look dead.
+        LayeredApparelSyncHelpers.TryRegisterNoCancel(AccessTools.DeclaredMethod(_itemType, "ApplyDisplayCondition"),
             "Item.ApplyDisplayCondition");
 
         // Manual link groups editor (ITab draws groups, commits via SetManualGroups).
-        LayeredApparelSyncHelpers.TryRegister(AccessTools.DeclaredMethod(_itemType, "SetManualGroups"),
+        // NoCancel: empty/null group lists are legitimate (clearing links).
+        LayeredApparelSyncHelpers.TryRegisterNoCancel(AccessTools.DeclaredMethod(_itemType, "SetManualGroups"),
             "Item.SetManualGroups");
-        LayeredApparelSyncHelpers.TryRegister(AccessTools.DeclaredMethod(_itemType, "SetManualLinks"),
+        LayeredApparelSyncHelpers.TryRegisterNoCancel(AccessTools.DeclaredMethod(_itemType, "SetManualLinks"),
             "Item.SetManualLinks");
 
         // Connection mode switch (ITab condition/mode UI on attached items).
