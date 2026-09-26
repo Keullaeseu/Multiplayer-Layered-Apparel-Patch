@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using Verse;
 
 namespace MultiplayerLayeredApparelPatch.Source.Mods;
@@ -15,47 +15,47 @@ internal static class LayeredApparelCompSync
 
     internal static void Patch()
     {
-        var _compType = LayeredApparelTypes.CompType;
+        var compType = LayeredApparelTypes.CompType;
 
         // AddItem overloads: AddItem(CosmeticListType, LayeredApparelItem) [internal],
         // AddItem(LayeredApparelItem), AddDraftedItem, AddVacuumItem, AddPilotItem
-        foreach (var _methodInfo in AccessTools.GetDeclaredMethods(_compType))
-            if (_methodInfo.Name is "AddItem" or "AddDraftedItem" or "AddVacuumItem" or "AddPilotItem")
-                LayeredApparelSyncHelpers.TryRegister(_methodInfo, $"Comp.{_methodInfo}");
+        foreach (var methodInfo in AccessTools.GetDeclaredMethods(compType))
+            if (methodInfo.Name is "AddItem" or "AddDraftedItem" or "AddVacuumItem" or "AddPilotItem")
+                LayeredApparelSyncHelpers.TryRegister(methodInfo, $"Comp.{methodInfo}");
 
         // AddItems(CosmeticListType, IEnumerable<LayeredApparelItem>, bool)
         // Bulk imports (wardrobe multi-select, preset apply via AddItems). If MP can't
         // handle IEnumerable, registration logs an error but single-item Adds still sync.
-        var _addItemsMethod = AccessTools.DeclaredMethod(_compType, "AddItems");
-        if (_addItemsMethod != null) LayeredApparelSyncHelpers.TryRegisterNoCancel(_addItemsMethod, "Comp.AddItems");
+        var addItemsMethod = AccessTools.DeclaredMethod(compType, "AddItems");
+        if (addItemsMethod != null) LayeredApparelSyncHelpers.TryRegisterNoCancel(addItemsMethod, "Comp.AddItems");
         else Log.Warning($"{LogPrefix} Comp.AddItems not found");
 
         // Clear variants
-        foreach (var _methodName in new[] { "ClearItems", "ClearDraftedItems", "ClearVacuumItems", "ClearPilotItems" })
-        foreach (var _methodInfo in AccessTools.GetDeclaredMethods(_compType)
-                     .Where(_candidateInfo => _candidateInfo.Name == _methodName))
-            LayeredApparelSyncHelpers.TryRegister(_methodInfo, $"Comp.{_methodName}");
+        foreach (var methodName in new[] { "ClearItems", "ClearDraftedItems", "ClearVacuumItems", "ClearPilotItems" })
+        foreach (var methodInfo in AccessTools.GetDeclaredMethods(compType)
+                     .Where(candidateInfo => candidateInfo.Name == methodName))
+            LayeredApparelSyncHelpers.TryRegister(methodInfo, $"Comp.{methodName}");
 
         // Remove variants
-        foreach (var _methodInfo in AccessTools.GetDeclaredMethods(_compType)
-                     .Where(_candidateInfo => _candidateInfo.Name is "RemoveItem" or "RemoveItemAt"))
-            LayeredApparelSyncHelpers.TryRegister(_methodInfo, $"Comp.{_methodInfo}");
+        foreach (var methodInfo in AccessTools.GetDeclaredMethods(compType)
+                     .Where(candidateInfo => candidateInfo.Name is "RemoveItem" or "RemoveItemAt"))
+            LayeredApparelSyncHelpers.TryRegister(methodInfo, $"Comp.{methodInfo}");
 
         // Move variants
-        foreach (var _methodInfo in AccessTools.GetDeclaredMethods(_compType)
-                     .Where(_candidateInfo => _candidateInfo.Name is "MoveItem" or "MoveItemUp" or "MoveItemDown"))
-            LayeredApparelSyncHelpers.TryRegisterNoCancel(_methodInfo, $"Comp.{_methodInfo}");
+        foreach (var methodInfo in AccessTools.GetDeclaredMethods(compType)
+                     .Where(candidateInfo => candidateInfo.Name is "MoveItem" or "MoveItemUp" or "MoveItemDown"))
+            LayeredApparelSyncHelpers.TryRegisterNoCancel(methodInfo, $"Comp.{methodInfo}");
 
         // Hidden toggle (takes Apparel Thing, syncable by MP)
-        LayeredApparelSyncHelpers.TryRegister(AccessTools.DeclaredMethod(_compType, "ToggleHidden"),
+        LayeredApparelSyncHelpers.TryRegister(AccessTools.DeclaredMethod(compType, "ToggleHidden"),
             "Comp.ToggleHidden");
 
         // Enabled toggles for the four cosmetic lists. These are game state (which list
         // renders) and must sync. IsInExosuit is deliberately skipped: it's derived
         // from worn apparel via EmergencyStateSync/NotifyApparelChanged on all clients.
-        foreach (var _propertyName in new[] { "GlobalEnabled", "DraftedEnabled", "VacuumEnabled", "PilotEnabled" })
-            LayeredApparelSyncHelpers.TryRegisterNoCancel(AccessTools.DeclaredPropertySetter(_compType, _propertyName),
-                $"Comp.set_{_propertyName}");
+        foreach (var propertyName in new[] { "GlobalEnabled", "DraftedEnabled", "VacuumEnabled", "PilotEnabled" })
+            LayeredApparelSyncHelpers.TryRegisterNoCancel(AccessTools.DeclaredPropertySetter(compType, propertyName),
+                $"Comp.set_{propertyName}");
 
         // NOTE: TryApplyPreset is NOT synced directly. Its signature contains
         // Action<> / nullable / collection params that MP can't serialize, and its

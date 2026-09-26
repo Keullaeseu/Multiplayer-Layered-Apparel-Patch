@@ -1,4 +1,4 @@
-﻿using Multiplayer.Compat;
+using Multiplayer.Compat;
 using Verse;
 
 namespace MultiplayerLayeredApparelPatch.Source.Mods;
@@ -21,7 +21,7 @@ public class LayeredApparelPatch
 {
     private const string LogPrefix = "[Multiplayer Layered Apparel Patch]";
 
-    public LayeredApparelPatch(ModContentPack _contentPack)
+    public LayeredApparelPatch(ModContentPack contentPack)
     {
         LongEventHandler.ExecuteWhenFinished(LatePatch);
     }

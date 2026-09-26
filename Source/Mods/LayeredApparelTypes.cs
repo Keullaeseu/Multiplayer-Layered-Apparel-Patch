@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using Verse;
 
 namespace MultiplayerLayeredApparelPatch.Source.Mods;

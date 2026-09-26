@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Reflection;
 using Multiplayer.API;
 using UnityEngine;
@@ -50,31 +50,31 @@ internal static class LayeredApparelNestedSync
 
     private static void CacheFields()
     {
-        var _conditionType = LayeredApparelTypes.ConditionType;
-        condLayer = LayeredApparelSyncHelpers.GetField(_conditionType, "Layer");
-        condLayers = LayeredApparelSyncHelpers.GetField(_conditionType, "_layers");
-        condRequireAll = LayeredApparelSyncHelpers.GetField(_conditionType, "RequireAllLayers");
-        condBodyGroups = LayeredApparelSyncHelpers.GetField(_conditionType, "BodyGroups");
-        condUseArmor = LayeredApparelSyncHelpers.GetField(_conditionType, "UseArmor");
-        condArmorStat = LayeredApparelSyncHelpers.GetField(_conditionType, "ArmorStat");
-        condMinimumArmor = LayeredApparelSyncHelpers.GetField(_conditionType, "MinimumArmor");
-        condArmorMinimums = LayeredApparelSyncHelpers.GetField(_conditionType, "_armorMinimums");
-        condArmorSystem = LayeredApparelSyncHelpers.GetField(_conditionType, "_armorSystem");
+        var conditionType = LayeredApparelTypes.ConditionType;
+        condLayer = LayeredApparelSyncHelpers.GetField(conditionType, "Layer");
+        condLayers = LayeredApparelSyncHelpers.GetField(conditionType, "_layers");
+        condRequireAll = LayeredApparelSyncHelpers.GetField(conditionType, "RequireAllLayers");
+        condBodyGroups = LayeredApparelSyncHelpers.GetField(conditionType, "BodyGroups");
+        condUseArmor = LayeredApparelSyncHelpers.GetField(conditionType, "UseArmor");
+        condArmorStat = LayeredApparelSyncHelpers.GetField(conditionType, "ArmorStat");
+        condMinimumArmor = LayeredApparelSyncHelpers.GetField(conditionType, "MinimumArmor");
+        condArmorMinimums = LayeredApparelSyncHelpers.GetField(conditionType, "_armorMinimums");
+        condArmorSystem = LayeredApparelSyncHelpers.GetField(conditionType, "_armorSystem");
 
-        var _linkGroupType = LayeredApparelTypes.LinkGroupType;
-        linkEquipment = LayeredApparelSyncHelpers.GetField(_linkGroupType, "Equipment");
-        linkRequireAll = LayeredApparelSyncHelpers.GetField(_linkGroupType, "RequireAll");
+        var linkGroupType = LayeredApparelTypes.LinkGroupType;
+        linkEquipment = LayeredApparelSyncHelpers.GetField(linkGroupType, "Equipment");
+        linkRequireAll = LayeredApparelSyncHelpers.GetField(linkGroupType, "RequireAll");
 
-        var _appearanceType = LayeredApparelTypes.AppearanceType;
-        appearFront = LayeredApparelSyncHelpers.GetField(_appearanceType, "Front");
-        appearSide = LayeredApparelSyncHelpers.GetField(_appearanceType, "Side");
-        appearBack = LayeredApparelSyncHelpers.GetField(_appearanceType, "Back");
-        appearBodyType = LayeredApparelSyncHelpers.GetField(_appearanceType, "BodyType");
+        var appearanceType = LayeredApparelTypes.AppearanceType;
+        appearFront = LayeredApparelSyncHelpers.GetField(appearanceType, "Front");
+        appearSide = LayeredApparelSyncHelpers.GetField(appearanceType, "Side");
+        appearBack = LayeredApparelSyncHelpers.GetField(appearanceType, "Back");
+        appearBodyType = LayeredApparelSyncHelpers.GetField(appearanceType, "BodyType");
 
-        var _transformType = LayeredApparelTypes.TransformType;
-        transScale = LayeredApparelSyncHelpers.GetField(_transformType, "Scale");
-        transOffset = LayeredApparelSyncHelpers.GetField(_transformType, "Offset");
-        transRotation = LayeredApparelSyncHelpers.GetField(_transformType, "Rotation");
+        var transformType = LayeredApparelTypes.TransformType;
+        transScale = LayeredApparelSyncHelpers.GetField(transformType, "Scale");
+        transOffset = LayeredApparelSyncHelpers.GetField(transformType, "Offset");
+        transRotation = LayeredApparelSyncHelpers.GetField(transformType, "Rotation");
     }
 
     private static void RegisterWorkers()
@@ -84,9 +84,9 @@ internal static class LayeredApparelNestedSync
             MP.RegisterSyncWorker<object>(SyncApparelTransform, LayeredApparelTypes.TransformType,
                 shouldConstruct: true);
         }
-        catch (Exception _exception)
+        catch (Exception exception)
         {
-            Log.Error($"{LogPrefix} Register ApparelTransform worker failed: {_exception}");
+            Log.Error($"{LogPrefix} Register ApparelTransform worker failed: {exception}");
         }
 
         try
@@ -94,9 +94,9 @@ internal static class LayeredApparelNestedSync
             MP.RegisterSyncWorker<object>(SyncApparelAppearance, LayeredApparelTypes.AppearanceType,
                 shouldConstruct: true);
         }
-        catch (Exception _exception)
+        catch (Exception exception)
         {
-            Log.Error($"{LogPrefix} Register ApparelAppearance worker failed: {_exception}");
+            Log.Error($"{LogPrefix} Register ApparelAppearance worker failed: {exception}");
         }
 
         try
@@ -104,9 +104,9 @@ internal static class LayeredApparelNestedSync
             MP.RegisterSyncWorker<object>(SyncApparelLinkGroup, LayeredApparelTypes.LinkGroupType,
                 shouldConstruct: true);
         }
-        catch (Exception _exception)
+        catch (Exception exception)
         {
-            Log.Error($"{LogPrefix} Register ApparelLinkGroup worker failed: {_exception}");
+            Log.Error($"{LogPrefix} Register ApparelLinkGroup worker failed: {exception}");
         }
 
         try
@@ -114,250 +114,250 @@ internal static class LayeredApparelNestedSync
             MP.RegisterSyncWorker<object>(SyncApparelDisplayCondition, LayeredApparelTypes.ConditionType,
                 shouldConstruct: true);
         }
-        catch (Exception _exception)
+        catch (Exception exception)
         {
-            Log.Error($"{LogPrefix} Register ApparelDisplayCondition worker failed: {_exception}");
+            Log.Error($"{LogPrefix} Register ApparelDisplayCondition worker failed: {exception}");
         }
     }
 
-    private static void SyncApparelTransform(SyncWorker _sync, ref object _object)
+    private static void SyncApparelTransform(SyncWorker sync, ref object obj)
     {
-        if (_sync.isWriting)
+        if (sync.isWriting)
         {
-            var _isNotNull = _object != null;
-            _sync.Write(_isNotNull);
-            if (!_isNotNull) return;
-            var _scale = (Vector2)transScale.GetValue(_object);
-            var _offset = (Vector2)transOffset.GetValue(_object);
-            var _rotation = (float)transRotation.GetValue(_object);
-            _sync.Write(_scale.x);
-            _sync.Write(_scale.y);
-            _sync.Write(_offset.x);
-            _sync.Write(_offset.y);
-            _sync.Write(_rotation);
-        }
-        else
-        {
-            if (!_sync.Read<bool>())
-            {
-                _object = null;
-                return;
-            }
-
-            float _scaleX = _sync.Read<float>(), _scaleY = _sync.Read<float>();
-            float _offsetX = _sync.Read<float>(), _offsetY = _sync.Read<float>();
-            var _rotation = _sync.Read<float>();
-            var _instance = Activator.CreateInstance(LayeredApparelTypes.TransformType);
-            transScale.SetValue(_instance, new Vector2(_scaleX, _scaleY));
-            transOffset.SetValue(_instance, new Vector2(_offsetX, _offsetY));
-            transRotation.SetValue(_instance, _rotation);
-            _object = _instance;
-        }
-    }
-
-    private static void WriteTransformInline(SyncWorker _sync, object _transform)
-    {
-        var _isNotNull = _transform != null;
-        _sync.Write(_isNotNull);
-        if (!_isNotNull) return;
-        var _scale = (Vector2)transScale.GetValue(_transform);
-        var _offset = (Vector2)transOffset.GetValue(_transform);
-        _sync.Write(_scale.x);
-        _sync.Write(_scale.y);
-        _sync.Write(_offset.x);
-        _sync.Write(_offset.y);
-        _sync.Write((float)transRotation.GetValue(_transform));
-    }
-
-    private static object ReadTransformInline(SyncWorker _sync)
-    {
-        if (!_sync.Read<bool>()) return null;
-        float _scaleX = _sync.Read<float>(), _scaleY = _sync.Read<float>();
-        float _offsetX = _sync.Read<float>(), _offsetY = _sync.Read<float>();
-        var _rotation = _sync.Read<float>();
-        var _instance = Activator.CreateInstance(LayeredApparelTypes.TransformType);
-        transScale.SetValue(_instance, new Vector2(_scaleX, _scaleY));
-        transOffset.SetValue(_instance, new Vector2(_offsetX, _offsetY));
-        transRotation.SetValue(_instance, _rotation);
-        return _instance;
-    }
-
-    private static void SyncApparelAppearance(SyncWorker _sync, ref object _object)
-    {
-        if (_sync.isWriting)
-        {
-            var _isNotNull = _object != null;
-            _sync.Write(_isNotNull);
-            if (!_isNotNull) return;
-            WriteTransformInline(_sync, appearFront.GetValue(_object));
-            WriteTransformInline(_sync, appearSide.GetValue(_object));
-            WriteTransformInline(_sync, appearBack.GetValue(_object));
-            _sync.Write((Def)appearBodyType.GetValue(_object));
+            var isNotNull = obj != null;
+            sync.Write(isNotNull);
+            if (!isNotNull) return;
+            var scale = (Vector2)transScale.GetValue(obj);
+            var offset = (Vector2)transOffset.GetValue(obj);
+            var rotation = (float)transRotation.GetValue(obj);
+            sync.Write(scale.x);
+            sync.Write(scale.y);
+            sync.Write(offset.x);
+            sync.Write(offset.y);
+            sync.Write(rotation);
         }
         else
         {
-            if (!_sync.Read<bool>())
+            if (!sync.Read<bool>())
             {
-                _object = null;
+                obj = null;
                 return;
             }
 
-            var _instance = Activator.CreateInstance(LayeredApparelTypes.AppearanceType);
-            appearFront.SetValue(_instance, ReadTransformInline(_sync));
-            appearSide.SetValue(_instance, ReadTransformInline(_sync));
-            appearBack.SetValue(_instance, ReadTransformInline(_sync));
-            appearBodyType.SetValue(_instance, _sync.Read<Def>());
-            _object = _instance;
+            float scaleX = sync.Read<float>(), scaleY = sync.Read<float>();
+            float offsetX = sync.Read<float>(), offsetY = sync.Read<float>();
+            var rotation = sync.Read<float>();
+            var instance = Activator.CreateInstance(LayeredApparelTypes.TransformType);
+            transScale.SetValue(instance, new Vector2(scaleX, scaleY));
+            transOffset.SetValue(instance, new Vector2(offsetX, offsetY));
+            transRotation.SetValue(instance, rotation);
+            obj = instance;
         }
     }
 
-    internal static void WriteAppearanceInline(SyncWorker _sync, object _appearance)
+    private static void WriteTransformInline(SyncWorker sync, object transform)
     {
-        var _isNotNull = _appearance != null;
-        _sync.Write(_isNotNull);
-        if (!_isNotNull) return;
-        WriteTransformInline(_sync, appearFront.GetValue(_appearance));
-        WriteTransformInline(_sync, appearSide.GetValue(_appearance));
-        WriteTransformInline(_sync, appearBack.GetValue(_appearance));
-        _sync.Write((Def)appearBodyType.GetValue(_appearance));
+        var isNotNull = transform != null;
+        sync.Write(isNotNull);
+        if (!isNotNull) return;
+        var scale = (Vector2)transScale.GetValue(transform);
+        var offset = (Vector2)transOffset.GetValue(transform);
+        sync.Write(scale.x);
+        sync.Write(scale.y);
+        sync.Write(offset.x);
+        sync.Write(offset.y);
+        sync.Write((float)transRotation.GetValue(transform));
     }
 
-    internal static object ReadAppearanceInline(SyncWorker _sync)
+    private static object ReadTransformInline(SyncWorker sync)
     {
-        if (!_sync.Read<bool>()) return null;
-        var _instance = Activator.CreateInstance(LayeredApparelTypes.AppearanceType);
-        appearFront.SetValue(_instance, ReadTransformInline(_sync));
-        appearSide.SetValue(_instance, ReadTransformInline(_sync));
-        appearBack.SetValue(_instance, ReadTransformInline(_sync));
-        appearBodyType.SetValue(_instance, _sync.Read<Def>());
-        return _instance;
+        if (!sync.Read<bool>()) return null;
+        float scaleX = sync.Read<float>(), scaleY = sync.Read<float>();
+        float offsetX = sync.Read<float>(), offsetY = sync.Read<float>();
+        var rotation = sync.Read<float>();
+        var instance = Activator.CreateInstance(LayeredApparelTypes.TransformType);
+        transScale.SetValue(instance, new Vector2(scaleX, scaleY));
+        transOffset.SetValue(instance, new Vector2(offsetX, offsetY));
+        transRotation.SetValue(instance, rotation);
+        return instance;
     }
 
-    private static void SyncApparelLinkGroup(SyncWorker _sync, ref object _object)
+    private static void SyncApparelAppearance(SyncWorker sync, ref object obj)
     {
-        if (_sync.isWriting)
+        if (sync.isWriting)
         {
-            var _isNotNull = _object != null;
-            _sync.Write(_isNotNull);
-            if (!_isNotNull) return;
-            LayeredApparelSyncHelpers.WriteStringList(_sync, linkEquipment.GetValue(_object) as List<string>);
-            _sync.Write((bool)linkRequireAll.GetValue(_object));
+            var isNotNull = obj != null;
+            sync.Write(isNotNull);
+            if (!isNotNull) return;
+            WriteTransformInline(sync, appearFront.GetValue(obj));
+            WriteTransformInline(sync, appearSide.GetValue(obj));
+            WriteTransformInline(sync, appearBack.GetValue(obj));
+            sync.Write((Def)appearBodyType.GetValue(obj));
         }
         else
         {
-            if (!_sync.Read<bool>())
+            if (!sync.Read<bool>())
             {
-                _object = null;
+                obj = null;
                 return;
             }
 
-            var _instance = Activator.CreateInstance(LayeredApparelTypes.LinkGroupType);
-            linkEquipment.SetValue(_instance, LayeredApparelSyncHelpers.ReadStringList(_sync));
-            linkRequireAll.SetValue(_instance, _sync.Read<bool>());
-            _object = _instance;
+            var instance = Activator.CreateInstance(LayeredApparelTypes.AppearanceType);
+            appearFront.SetValue(instance, ReadTransformInline(sync));
+            appearSide.SetValue(instance, ReadTransformInline(sync));
+            appearBack.SetValue(instance, ReadTransformInline(sync));
+            appearBodyType.SetValue(instance, sync.Read<Def>());
+            obj = instance;
         }
     }
 
-    private static void WriteLinkGroupInline(SyncWorker _sync, object _linkGroup)
+    internal static void WriteAppearanceInline(SyncWorker sync, object appearance)
     {
-        var _isNotNull = _linkGroup != null;
-        _sync.Write(_isNotNull);
-        if (!_isNotNull) return;
-        LayeredApparelSyncHelpers.WriteStringList(_sync, linkEquipment.GetValue(_linkGroup) as List<string>);
-        _sync.Write((bool)linkRequireAll.GetValue(_linkGroup));
+        var isNotNull = appearance != null;
+        sync.Write(isNotNull);
+        if (!isNotNull) return;
+        WriteTransformInline(sync, appearFront.GetValue(appearance));
+        WriteTransformInline(sync, appearSide.GetValue(appearance));
+        WriteTransformInline(sync, appearBack.GetValue(appearance));
+        sync.Write((Def)appearBodyType.GetValue(appearance));
     }
 
-    private static object ReadLinkGroupInline(SyncWorker _sync)
+    internal static object ReadAppearanceInline(SyncWorker sync)
     {
-        if (!_sync.Read<bool>()) return null;
-        var _instance = Activator.CreateInstance(LayeredApparelTypes.LinkGroupType);
-        linkEquipment.SetValue(_instance, LayeredApparelSyncHelpers.ReadStringList(_sync));
-        linkRequireAll.SetValue(_instance, _sync.Read<bool>());
-        return _instance;
+        if (!sync.Read<bool>()) return null;
+        var instance = Activator.CreateInstance(LayeredApparelTypes.AppearanceType);
+        appearFront.SetValue(instance, ReadTransformInline(sync));
+        appearSide.SetValue(instance, ReadTransformInline(sync));
+        appearBack.SetValue(instance, ReadTransformInline(sync));
+        appearBodyType.SetValue(instance, sync.Read<Def>());
+        return instance;
     }
 
-    internal static void WriteLinkGroupList(SyncWorker _sync, IList _linkGroups)
+    private static void SyncApparelLinkGroup(SyncWorker sync, ref object obj)
     {
-        if (_linkGroups == null)
+        if (sync.isWriting)
         {
-            _sync.Write(-1);
+            var isNotNull = obj != null;
+            sync.Write(isNotNull);
+            if (!isNotNull) return;
+            LayeredApparelSyncHelpers.WriteStringList(sync, linkEquipment.GetValue(obj) as List<string>);
+            sync.Write((bool)linkRequireAll.GetValue(obj));
+        }
+        else
+        {
+            if (!sync.Read<bool>())
+            {
+                obj = null;
+                return;
+            }
+
+            var instance = Activator.CreateInstance(LayeredApparelTypes.LinkGroupType);
+            linkEquipment.SetValue(instance, LayeredApparelSyncHelpers.ReadStringList(sync));
+            linkRequireAll.SetValue(instance, sync.Read<bool>());
+            obj = instance;
+        }
+    }
+
+    private static void WriteLinkGroupInline(SyncWorker sync, object linkGroup)
+    {
+        var isNotNull = linkGroup != null;
+        sync.Write(isNotNull);
+        if (!isNotNull) return;
+        LayeredApparelSyncHelpers.WriteStringList(sync, linkEquipment.GetValue(linkGroup) as List<string>);
+        sync.Write((bool)linkRequireAll.GetValue(linkGroup));
+    }
+
+    private static object ReadLinkGroupInline(SyncWorker sync)
+    {
+        if (!sync.Read<bool>()) return null;
+        var instance = Activator.CreateInstance(LayeredApparelTypes.LinkGroupType);
+        linkEquipment.SetValue(instance, LayeredApparelSyncHelpers.ReadStringList(sync));
+        linkRequireAll.SetValue(instance, sync.Read<bool>());
+        return instance;
+    }
+
+    internal static void WriteLinkGroupList(SyncWorker sync, IList linkGroups)
+    {
+        if (linkGroups == null)
+        {
+            sync.Write(-1);
             return;
         }
 
-        _sync.Write(_linkGroups.Count);
-        foreach (var _linkGroup in _linkGroups) WriteLinkGroupInline(_sync, _linkGroup);
+        sync.Write(linkGroups.Count);
+        foreach (var linkGroup in linkGroups) WriteLinkGroupInline(sync, linkGroup);
     }
 
-    internal static IList ReadLinkGroupList(SyncWorker _sync)
+    internal static IList ReadLinkGroupList(SyncWorker sync)
     {
-        var _count = _sync.Read<int>();
-        if (_count < 0) return null;
-        var _genericListType = typeof(List<>).MakeGenericType(LayeredApparelTypes.LinkGroupType);
-        var _groupList = (IList)Activator.CreateInstance(_genericListType);
-        for (var _index = 0; _index < _count; _index++) _groupList.Add(ReadLinkGroupInline(_sync));
-        return _groupList;
+        var count = sync.Read<int>();
+        if (count < 0) return null;
+        var genericListType = typeof(List<>).MakeGenericType(LayeredApparelTypes.LinkGroupType);
+        var groupList = (IList)Activator.CreateInstance(genericListType);
+        for (var index = 0; index < count; index++) groupList.Add(ReadLinkGroupInline(sync));
+        return groupList;
     }
 
-    private static void SyncApparelDisplayCondition(SyncWorker _sync, ref object _object)
+    private static void SyncApparelDisplayCondition(SyncWorker sync, ref object obj)
     {
-        if (_sync.isWriting) WriteConditionInline(_sync, _object);
-        else _object = ReadConditionInline(_sync);
+        if (sync.isWriting) WriteConditionInline(sync, obj);
+        else obj = ReadConditionInline(sync);
     }
 
-    internal static void WriteConditionInline(SyncWorker _sync, object _condition)
+    internal static void WriteConditionInline(SyncWorker sync, object condition)
     {
-        var _isNotNull = _condition != null;
-        _sync.Write(_isNotNull);
-        if (!_isNotNull) return;
-        _sync.Write((string)condLayer.GetValue(_condition));
-        LayeredApparelSyncHelpers.WriteStringList(_sync, condLayers.GetValue(_condition) as List<string>);
-        _sync.Write((bool)condRequireAll.GetValue(_condition));
-        LayeredApparelSyncHelpers.WriteStringList(_sync, condBodyGroups.GetValue(_condition) as List<string>);
-        _sync.Write((bool)condUseArmor.GetValue(_condition));
-        _sync.Write((string)condArmorStat.GetValue(_condition));
-        _sync.Write((float)condMinimumArmor.GetValue(_condition));
-        var _armorMinimums = condArmorMinimums.GetValue(_condition) as IDictionary;
-        if (_armorMinimums == null)
+        var isNotNull = condition != null;
+        sync.Write(isNotNull);
+        if (!isNotNull) return;
+        sync.Write((string)condLayer.GetValue(condition));
+        LayeredApparelSyncHelpers.WriteStringList(sync, condLayers.GetValue(condition) as List<string>);
+        sync.Write((bool)condRequireAll.GetValue(condition));
+        LayeredApparelSyncHelpers.WriteStringList(sync, condBodyGroups.GetValue(condition) as List<string>);
+        sync.Write((bool)condUseArmor.GetValue(condition));
+        sync.Write((string)condArmorStat.GetValue(condition));
+        sync.Write((float)condMinimumArmor.GetValue(condition));
+        var armorMinimums = condArmorMinimums.GetValue(condition) as IDictionary;
+        if (armorMinimums == null)
         {
-            _sync.Write(-1);
+            sync.Write(-1);
         }
         else
         {
-            _sync.Write(_armorMinimums.Count);
-            foreach (DictionaryEntry _dictEntry in _armorMinimums)
+            sync.Write(armorMinimums.Count);
+            foreach (DictionaryEntry dictEntry in armorMinimums)
             {
-                _sync.Write((string)_dictEntry.Key);
-                _sync.Write((float)_dictEntry.Value);
+                sync.Write((string)dictEntry.Key);
+                sync.Write((float)dictEntry.Value);
             }
         }
 
-        _sync.Write((int)condArmorSystem.GetValue(_condition));
+        sync.Write((int)condArmorSystem.GetValue(condition));
     }
 
-    internal static object ReadConditionInline(SyncWorker _sync)
+    internal static object ReadConditionInline(SyncWorker sync)
     {
-        if (!_sync.Read<bool>()) return null;
-        var _instance = Activator.CreateInstance(LayeredApparelTypes.ConditionType);
-        condLayer.SetValue(_instance, _sync.Read<string>());
-        condLayers.SetValue(_instance, LayeredApparelSyncHelpers.ReadStringList(_sync));
-        condRequireAll.SetValue(_instance, _sync.Read<bool>());
-        condBodyGroups.SetValue(_instance, LayeredApparelSyncHelpers.ReadStringList(_sync));
-        condUseArmor.SetValue(_instance, _sync.Read<bool>());
-        condArmorStat.SetValue(_instance, _sync.Read<string>());
-        condMinimumArmor.SetValue(_instance, _sync.Read<float>());
-        var _count = _sync.Read<int>();
-        if (_count < 0)
+        if (!sync.Read<bool>()) return null;
+        var instance = Activator.CreateInstance(LayeredApparelTypes.ConditionType);
+        condLayer.SetValue(instance, sync.Read<string>());
+        condLayers.SetValue(instance, LayeredApparelSyncHelpers.ReadStringList(sync));
+        condRequireAll.SetValue(instance, sync.Read<bool>());
+        condBodyGroups.SetValue(instance, LayeredApparelSyncHelpers.ReadStringList(sync));
+        condUseArmor.SetValue(instance, sync.Read<bool>());
+        condArmorStat.SetValue(instance, sync.Read<string>());
+        condMinimumArmor.SetValue(instance, sync.Read<float>());
+        var count = sync.Read<int>();
+        if (count < 0)
         {
-            condArmorMinimums.SetValue(_instance, null);
+            condArmorMinimums.SetValue(instance, null);
         }
         else
         {
-            var _armorMinimums = (IDictionary)Activator.CreateInstance(typeof(Dictionary<string, float>));
-            for (var _index = 0; _index < _count; _index++) _armorMinimums[_sync.Read<string>()] = _sync.Read<float>();
-            condArmorMinimums.SetValue(_instance, _armorMinimums);
+            var armorMinimums = (IDictionary)Activator.CreateInstance(typeof(Dictionary<string, float>));
+            for (var index = 0; index < count; index++) armorMinimums[sync.Read<string>()] = sync.Read<float>();
+            condArmorMinimums.SetValue(instance, armorMinimums);
         }
 
-        condArmorSystem.SetValue(_instance, _sync.Read<int>());
-        return _instance;
+        condArmorSystem.SetValue(instance, sync.Read<int>());
+        return instance;
     }
 }

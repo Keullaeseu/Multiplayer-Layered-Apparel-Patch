@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Reflection;
 using HarmonyLib;
 using Multiplayer.API;
@@ -13,105 +13,105 @@ internal static class LayeredApparelSyncHelpers
 {
     private const string LogPrefix = "[Multiplayer Layered Apparel Sync Helpers Patch]";
 
-    internal static FieldInfo GetField(Type _type, string _fieldName)
+    internal static FieldInfo GetField(Type type, string fieldName)
     {
-        if (_type == null) return null;
-        var _fieldInfo = AccessTools.Field(_type, _fieldName);
-        if (_fieldInfo != null) return _fieldInfo;
+        if (type == null) return null;
+        var fieldInfo = AccessTools.Field(type, fieldName);
+        if (fieldInfo != null) return fieldInfo;
         // Fallback to explicit flags (covers private backing fields).
-        return _type.GetField(_fieldName,
+        return type.GetField(fieldName,
             BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
     }
 
-    internal static void TryRegister(MethodInfo _methodInfo, string _label)
+    internal static void TryRegister(MethodInfo methodInfo, string label)
     {
         try
         {
-            if (_methodInfo == null)
+            if (methodInfo == null)
             {
-                Log.Warning($"{LogPrefix} Skip sync (null method): {_label}");
+                Log.Warning($"{LogPrefix} Skip sync (null method): {label}");
                 return;
             }
 
-            MP.RegisterSyncMethod(_methodInfo).CancelIfAnyArgNull();
+            MP.RegisterSyncMethod(methodInfo).CancelIfAnyArgNull();
         }
-        catch (Exception _exception)
+        catch (Exception exception)
         {
-            Log.Error($"{LogPrefix} Register {_label} failed: {_exception}");
+            Log.Error($"{LogPrefix} Register {label} failed: {exception}");
         }
     }
 
-    internal static void TryRegisterNoCancel(MethodInfo _methodInfo, string _label)
+    internal static void TryRegisterNoCancel(MethodInfo methodInfo, string label)
     {
         try
         {
-            if (_methodInfo == null)
+            if (methodInfo == null)
             {
-                Log.Warning($"{LogPrefix} Skip sync (null method): {_label}");
+                Log.Warning($"{LogPrefix} Skip sync (null method): {label}");
                 return;
             }
 
-            MP.RegisterSyncMethod(_methodInfo);
+            MP.RegisterSyncMethod(methodInfo);
         }
-        catch (Exception _exception)
+        catch (Exception exception)
         {
-            Log.Error($"{LogPrefix} Register {_label} failed: {_exception}");
+            Log.Error($"{LogPrefix} Register {label} failed: {exception}");
         }
     }
 
-    internal static object GetComp(Pawn _pawn)
+    internal static object GetComp(Pawn pawn)
     {
-        if (_pawn == null || LayeredApparelTypes.CompType == null) return null;
+        if (pawn == null || LayeredApparelTypes.CompType == null) return null;
         try
         {
-            if (_pawn.AllComps == null) return null;
-            foreach (var _thingComp in _pawn.AllComps)
-                if (_thingComp != null && _thingComp.GetType() == LayeredApparelTypes.CompType)
-                    return _thingComp;
+            if (pawn.AllComps == null) return null;
+            foreach (var thingComp in pawn.AllComps)
+                if (thingComp != null && thingComp.GetType() == LayeredApparelTypes.CompType)
+                    return thingComp;
         }
-        catch (Exception _exception)
+        catch (Exception exception)
         {
-            Log.Error($"{LogPrefix} GetComp failed: {_exception}");
+            Log.Error($"{LogPrefix} GetComp failed: {exception}");
         }
 
         return null;
     }
 
-    internal static IList GetItemsList(object _comp, int _listTypeInt)
+    internal static IList GetItemsList(object comp, int listTypeInt)
     {
         try
         {
-            var _enumValue = Enum.ToObject(LayeredApparelTypes.ListTypeEnum, _listTypeInt);
-            var _getItemsMethod = AccessTools.Method(LayeredApparelTypes.CompType, "GetItems",
+            var enumValue = Enum.ToObject(LayeredApparelTypes.ListTypeEnum, listTypeInt);
+            var getItemsMethod = AccessTools.Method(LayeredApparelTypes.CompType, "GetItems",
                 new[] { LayeredApparelTypes.ListTypeEnum });
-            var _result = _getItemsMethod?.Invoke(_comp, new[] { _enumValue }) as IList;
-            return _result;
+            var result = getItemsMethod?.Invoke(comp, new[] { enumValue }) as IList;
+            return result;
         }
-        catch (Exception _exception)
+        catch (Exception exception)
         {
-            Log.Error($"{LogPrefix} GetItemsList failed: {_exception}");
+            Log.Error($"{LogPrefix} GetItemsList failed: {exception}");
             return null;
         }
     }
 
-    internal static void WriteStringList(SyncWorker _sync, List<string> _stringList)
+    internal static void WriteStringList(SyncWorker sync, List<string> stringList)
     {
-        if (_stringList == null)
+        if (stringList == null)
         {
-            _sync.Write(-1);
+            sync.Write(-1);
             return;
         }
 
-        _sync.Write(_stringList.Count);
-        foreach (var _entry in _stringList) _sync.Write(_entry);
+        sync.Write(stringList.Count);
+        foreach (var entry in stringList) sync.Write(entry);
     }
 
-    internal static List<string> ReadStringList(SyncWorker _sync)
+    internal static List<string> ReadStringList(SyncWorker sync)
     {
-        var _count = _sync.Read<int>();
-        if (_count < 0) return null;
-        var _stringList = new List<string>(_count);
-        for (var _index = 0; _index < _count; _index++) _stringList.Add(_sync.Read<string>());
-        return _stringList;
+        var count = sync.Read<int>();
+        if (count < 0) return null;
+        var stringList = new List<string>(count);
+        for (var index = 0; index < count; index++) stringList.Add(sync.Read<string>());
+        return stringList;
     }
 }

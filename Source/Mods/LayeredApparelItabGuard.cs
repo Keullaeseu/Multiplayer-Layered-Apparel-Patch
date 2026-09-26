@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using HarmonyLib;
 using Multiplayer.Compat;
 using Verse;
@@ -30,11 +30,11 @@ internal static class LayeredApparelItabGuard
 
     internal static void Patch()
     {
-        var _itabType = LayeredApparelTypes.ItabType;
-        if (_itabType == null) return;
+        var itabType = LayeredApparelTypes.ItabType;
+        if (itabType == null) return;
         try
         {
-            itabConditionItemField = LayeredApparelSyncHelpers.GetField(_itabType, "_conditionItem");
+            itabConditionItemField = LayeredApparelSyncHelpers.GetField(itabType, "_conditionItem");
             itemDisplayConditionProp = AccessTools.Property(LayeredApparelTypes.ItemType, "DisplayCondition");
             if (itabConditionItemField == null || itemDisplayConditionProp == null)
             {
@@ -42,19 +42,19 @@ internal static class LayeredApparelItabGuard
                 return;
             }
 
-            var _drawFiltersMethod = AccessTools.DeclaredMethod(_itabType, "DrawConditionFilters");
-            if (_drawFiltersMethod == null)
+            var drawFiltersMethod = AccessTools.DeclaredMethod(itabType, "DrawConditionFilters");
+            if (drawFiltersMethod == null)
             {
                 Log.Warning($"{LogPrefix} UI null-guard skipped (DrawConditionFilters not found).");
                 return;
             }
 
-            MpCompat.harmony.Patch(_drawFiltersMethod,
+            MpCompat.harmony.Patch(drawFiltersMethod,
                 new HarmonyMethod(typeof(LayeredApparelItabGuard), nameof(PreDrawConditionFilters)));
         }
-        catch (Exception _exception)
+        catch (Exception exception)
         {
-            Log.Error($"{LogPrefix} UI null-guard patch failed: {_exception}");
+            Log.Error($"{LogPrefix} UI null-guard patch failed: {exception}");
         }
     }
 
@@ -63,13 +63,13 @@ internal static class LayeredApparelItabGuard
         // true = run original, false = skip this frame (condition arrives next tick).
         try
         {
-            var _conditionItem = itabConditionItemField?.GetValue(__instance);
-            if (_conditionItem == null) return false;
-            if (itemDisplayConditionProp?.GetValue(_conditionItem) == null) return false;
+            var conditionItem = itabConditionItemField?.GetValue(__instance);
+            if (conditionItem == null) return false;
+            if (itemDisplayConditionProp?.GetValue(conditionItem) == null) return false;
         }
-        catch (Exception _exception)
+        catch (Exception exception)
         {
-            Log.ErrorOnce($"{LogPrefix} UI null-guard check failed: {_exception}", 0x6A11E6);
+            Log.ErrorOnce($"{LogPrefix} UI null-guard check failed: {exception}", 0x6A11E6);
             return false;
         }
 
