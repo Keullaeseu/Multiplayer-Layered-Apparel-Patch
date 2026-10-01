@@ -29,13 +29,13 @@ Subscribe to the required mods and add them to your RimWorld mod list in the fol
 3. Royalty, Ideology, Biotech, and Anomaly, if applicable
 4. RimWorld Multiplayer
 5. [Layered Apparel](https://steamcommunity.com/workshop/filedetails/?id=3632480044)
-6. [Multiplayer Layered Apparel Types Patch](https://github.com/Keullaeseu/Multiplayer-Layered-Apparel-Types-Patch/releases/latest)
+6. [Multiplayer Layered Apparel Types Patch](https://github.com/Keullaeseu/Multiplayer-Layered-Apparel-Patch/releases/latest)
 
 The patch should load after both RimWorld Multiplayer and [Layered Apparel](https://steamcommunity.com/workshop/filedetails/?id=3632480044).
 
 ### Manual Installation
 
-1. Download the latest release from the [**Releases**](https://github.com/Keullaeseu/Multiplayer-Layered-Apparel-Types-Patch/releases/latest) section.
+1. Download the latest release from the [**Releases**](https://github.com/Keullaeseu/Multiplayer-Layered-Apparel-Patch/releases/latest) section.
 2. Extract the mod folder into your RimWorld `Mods` directory.
 3. Enable the required mods in RimWorld.
 4. Use the recommended load order listed above.
@@ -47,7 +47,7 @@ All players should have the following mods installed and enabled:
 
 - RimWorld Multiplayer
 - [Layered Apparel](https://steamcommunity.com/workshop/filedetails/?id=3632480044)
-- [Multiplayer Layered Apparel Types Patch](https://github.com/Keullaeseu/Multiplayer-Layered-Apparel-Types-Patch/releases/latest)
+- [Multiplayer Layered Apparel Types Patch](https://github.com/Keullaeseu/Multiplayer-Layered-Apparel-Patch/releases/latest)
 - All required Layered Apparel dependencies
 
 The host and all connected clients should use the same:
