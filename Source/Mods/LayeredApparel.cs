@@ -4,8 +4,9 @@ using Verse;
 namespace MultiplayerLayeredApparelPatch.Source.Mods;
 
 /// <summary>
-///     Multiplayer Patch for Layered Apparel by Costel, Last Update: 21 Sep @ 8:51pm 2026
-///     https://steamcommunity.com/workshop/filedetails/?id=3632480044
+///     Multiplayer Patch for Layered Apparel by Costel,
+///     Last Update: 25 Sep @ 3:07pm 2026
+///     <see href="https://steamcommunity.com/workshop/filedetails/?id=3632480044" />
 ///     Entry point: LatePatch wires up each component below.
 ///     - LayeredApparelTypes: reflected mod types (Comp, Item, Condition, ...).
 ///     - LayeredApparelNestedSync: sync workers for ApparelTransform, ApparelAppearance,
